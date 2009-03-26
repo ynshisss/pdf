@@ -6,4 +6,5 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp
 HEADERS += mainwindow.h
-OTHER_FILES += xpdf/readme.txt
+OTHER_FILES += xpdf/readme.txt \
+    images/image.txt
