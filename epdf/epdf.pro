@@ -5,6 +5,7 @@ TARGET = epdf
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp
-HEADERS += mainwindow.h
-OTHER_FILES += xpdf/readme.txt \
-    images/image.txt
+
+HEADERS += mainwindow.h \
+    library/fileselector.h
+RESOURCES += epdf.qrc

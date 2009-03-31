@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/" >
+        <file alias="fileopen" >images/fileopen.png</file>
+        <file alias="find" >images/find.png</file>
+        <file alias="fullscreen" >images/fullscreen.png</file>
+        <file alias="fastback" >images/fastback.png</file>
+        <file alias="back" >images/back.png</file>
+        <file alias="down" >images/down.png</file>
+        <file alias="forward" >images/forward.png</file>
+        <file alias="fastforward" >images/fastforward.png</file>
+        <file alias="qpdf_icon" >images/qpdf_icon.png</file>
+    </qresource>
+</RCC>
