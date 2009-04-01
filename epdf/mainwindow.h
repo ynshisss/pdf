@@ -6,6 +6,8 @@ class QStackedWidget;
 class QMenu;
 class QToolBar;
 class QLineEdit;
+class QAction;
+
 class FileSelector;
 class OutputDev;
 
@@ -23,7 +25,7 @@ public slots:
     void nextPage ( );
     void lastPage ( );
     void gotoPage ( int n );
-    void setZoom ( int z );
+    void setZoom ( QAction*);
     void gotoPageDialog ( );
     void toggleFullscreen ( );
     void toggleFindBar ( );
@@ -33,15 +35,18 @@ public slots:
     void openFile ( const QString & );
 //    void openFile ( const DocLnk & );
     void setDocument ( const QString & );
+    virtual QMenu * createPopupMenu ();
 private:
-    void createToolBar();
+    void createToolBars();
 
     QStackedWidget *m_stack;
     FileSelector *m_filesel;
     OutputDev *m_outdev;
+
     QToolBar *m_tb_menu, *m_tb_tool, *m_tb_find;
     QLineEdit *m_findedit;
-    QPopupMenu *m_pm_zoom;
+    QMenu *m_pm_zoom;
+    QAction *m_to_find, *m_to_full;
 
     bool m_fullscreen;
     bool m_busy;
