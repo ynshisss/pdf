@@ -35,6 +35,7 @@ QListWidgetItem * FileSelectorView::createItem(const QFileInfo *info)
 {
     QString fileName = info->fileName();
     QListWidgetItem *item = new QListWidgetItem(fileName);
+    item->setData(Qt::UserRole, info->absoluteFilePath());
     return item;
 }
 
@@ -50,6 +51,10 @@ void FileSelectorView::displayItem()
     }
 
 }
+
 void FileSelectorView::refresh()
 {
+    dir->refresh();
+    clear();
+    displayItem();
 }

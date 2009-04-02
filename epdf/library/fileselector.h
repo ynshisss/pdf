@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class FileSelectorView;
-
+class QListWidgetItem;
 
 class FileSelector : public QWidget
 {
@@ -14,7 +14,11 @@ public:
     FileSelector(QWidget *parent = 0);
     ~FileSelector();
 signals:
+    void fileSelected( const QString & );
     void closeMe();
+
+private slots:
+    void fileClicked(QListWidgetItem *);
 
 private:
     FileSelectorView *view;

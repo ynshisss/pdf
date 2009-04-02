@@ -33,6 +33,10 @@ FileSelector::FileSelector(QWidget *parent) : QWidget(parent)
     view = new FileSelectorView();
     view->setSpacing(1);
     view->setAlternatingRowColors(true);
+    connect(view, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(fileClicked(QListWidgetItem*)));
+    connect(buttonFresh, SIGNAL(clicked()), view, SLOT(refresh()));
+
     QVBoxLayout *vbl = new QVBoxLayout(this);
     vbl->setContentsMargins(0, 0, 0, 0);
     vbl->setSpacing(0);
@@ -43,6 +47,14 @@ FileSelector::FileSelector(QWidget *parent) : QWidget(parent)
 
 FileSelector::~FileSelector()
 {
+}
+
+void FileSelector::fileClicked(QListWidgetItem *item)
+{
+    if( !item )
+        return;
+    emit fileSelected(item->data(Qt::UserRole).toString());
+    emit closeMe();
 }
 
 
