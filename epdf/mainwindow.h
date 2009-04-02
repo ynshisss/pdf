@@ -36,9 +36,11 @@ public slots:
 //    void openFile ( const DocLnk & );
     void setDocument ( const QString & );
     virtual QMenu * createPopupMenu ();
+
 private:
     void createToolBars();
 
+private:
     QStackedWidget *m_stack;
     FileSelector *m_filesel;
     OutputDev *m_outdev;

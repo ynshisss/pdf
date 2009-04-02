@@ -8,10 +8,12 @@
 #include <QSizePolicy>
 #include <QLineEdit>
 
-#include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+#include "mainwindow.h"
+#include "library\fileselector.h"
+#include "outputdev.h"
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setWindowTitle(tr("Epdf"));
     setWindowIcon(QIcon(tr(":/qpdf_icon")));
@@ -28,12 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_filesel = new FileSelector();
     m_outdev = new OutputDev();
 
-    m_stack = new QWidgetStack();
-    m_stack->addWidget(m_filesel);
+    m_stack = new QStackedWidget();
     m_stack->addWidget(m_outdev);
+    m_stack->addWidget(m_filesel);
+
 
     setCentralWidget(m_stack);
-
+    //openFile();
 }
 
 MainWindow::~MainWindow()
@@ -107,7 +110,7 @@ void MainWindow::createToolBars()
                          this, SLOT(findText()));
     m_tb_find->addAction(QIcon(tr(":/next")), tr("Next"),
                          this, SLOT(findText()));
-    openFile();
+
 
 }
 
@@ -159,6 +162,10 @@ void MainWindow::findText ( )
 }
 void MainWindow::openFile ( )
 {
+    m_tb_menu->hide();
+    m_tb_tool->hide();
+    m_tb_find->hide();
+    m_stack->setCurrentWidget(m_filesel);
 }
 void MainWindow::openFile ( const QString &f )
 {

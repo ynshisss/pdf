@@ -1,14 +1,22 @@
 #ifndef FILESELECTOR_H
 #define FILESELECTOR_H
 
-#include <QMainWindow>
-class FileSelector : public QMainWindow
+#include <QWidget>
+
+class FileSelectorView;
+
+
+class FileSelector : public QWidget
 {
     Q_OBJECT
 
 public:
-    FileSelector();
+    FileSelector(QWidget *parent = 0);
     ~FileSelector();
+signals:
+    void closeMe();
 
-}
+private:
+    FileSelectorView *view;
+};
 #endif // FILESELECTOR_H

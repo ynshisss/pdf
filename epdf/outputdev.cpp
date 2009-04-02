@@ -1,5 +1,9 @@
 #include "outputdev.h"
 
-OutputDev::OutputDev()
+OutputDev::OutputDev(QWidget *parent) : QWidget(parent)
+{
+}
+
+OutputDev::~OutputDev()
 {
 }

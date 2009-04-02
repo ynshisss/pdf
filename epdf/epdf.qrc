@@ -10,5 +10,7 @@
         <file alias="fastforward" >images/fastforward.png</file>
         <file alias="qpdf_icon" >images/qpdf_icon.png</file>
         <file alias="next" >images/next.png</file>
+        <file alias="close" >images/close.png</file>
+        <file alias="update" >images/update.png</file>
     </qresource>
 </RCC>

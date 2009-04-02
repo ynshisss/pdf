@@ -6,8 +6,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     library/fileselector.cpp \
-    outputdev.cpp
+    outputdev.cpp \
+    library/fileselectorview.cpp
 HEADERS += mainwindow.h \
     library/fileselector.h \
-    outputdev.h
+    outputdev.h \
+    library/fileselectorview.h
 RESOURCES += epdf.qrc
+OTHER_FILES += epdf.ini

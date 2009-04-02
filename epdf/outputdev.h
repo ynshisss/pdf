@@ -1,13 +1,15 @@
 #ifndef OUTPUTDEV_H
 #define OUTPUTDEV_H
 
-#include <QMainWindow>
+#include <QWidget>
 
-class OutputDev : public QMainWindow
+class OutputDev : public QWidget
 {
+    Q_OBJECT
 public:
-    OutputDev();
+    OutputDev(QWidget *parent = 0);
     ~OutputDev();
+
 };
 
 #endif // OUTPUTDEV_H
