@@ -7,11 +7,13 @@
 #include <QIcon>
 #include <QSizePolicy>
 #include <QLineEdit>
-
+#include <QFileInfo>
+#include <QtDebug>
 
 #include "mainwindow.h"
-#include "library\fileselector.h"
 #include "outputdev.h"
+#include "library/fileselector.h"
+//#include "xpdf/PDFDoc.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -24,10 +26,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_currentpage = 0;
     m_fullscreen = false;
     m_renderok = false;
+//	m_doc = NULL;
 
     createToolBars();
 
     m_filesel = new FileSelector();
+	connect(m_filesel, SIGNAL(closeMe()), this, SLOT(closeFileSelector()));
+	connect(m_filesel, SIGNAL(fileSelected(const QString &)),
+			this, SLOT(openFile(const QString &)));
+
     m_outdev = new OutputDev();
 
     m_stack = new QStackedWidget();
@@ -113,7 +120,14 @@ void MainWindow::createToolBars()
 
 
 }
-
+void MainWindow::closeFileSelector()
+{
+	m_tb_menu->show();
+	m_tb_tool->show();
+	m_tb_find->hide();
+	m_to_find->setChecked(false);
+	m_stack->setCurrentWidget(m_outdev);
+}
 void MainWindow::firstPage ( )
 {
 }
@@ -169,13 +183,17 @@ void MainWindow::openFile ( )
 }
 void MainWindow::openFile ( const QString &f )
 {
+	QFileInfo fi(f);
+	if(fi.exists())
+	{
+		
+	}
 }
 //    void MainWindow::openFile ( const DocLnk &f ){}
 void MainWindow::setDocument ( const QString & )
 {
 }
-QMenu * MainWindow::createPopupMenu ()
+QMenu * MainWindow::CreatePopupMenu()
 {
-    return NULL;
+	return NULL;
 }
-

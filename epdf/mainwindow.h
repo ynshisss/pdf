@@ -10,6 +10,7 @@ class QAction;
 
 class FileSelector;
 class OutputDev;
+//class PDFDoc;
 
 class MainWindow : public QMainWindow
 {
@@ -39,11 +40,14 @@ public slots:
 
 private:
     void createToolBars();
+private slots:
+	void closeFileSelector();
 
 private:
     QStackedWidget *m_stack;
     FileSelector *m_filesel;
     OutputDev *m_outdev;
+	//PDFDoc *m_doc;
 
     QToolBar *m_tb_menu, *m_tb_tool, *m_tb_find;
     QLineEdit *m_findedit;

@@ -51,7 +51,7 @@ FileSelector::~FileSelector()
 
 void FileSelector::fileClicked(QListWidgetItem *item)
 {
-    if( !item )
+    if( !item || item->data(Qt::UserRole).isNull())
         return;
     emit fileSelected(item->data(Qt::UserRole).toString());
     emit closeMe();

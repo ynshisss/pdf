@@ -4,10 +4,10 @@
 #include <QFileInfo>
 #include <QList>
 #include <QListWidgetItem>
-
+#include <QtDebug>
 #include "fileselectorview.h"
 
-static const QString INIT = "../epdf.ini";
+static const QString INIT = "epdf.ini";
 static const QString PDF_KEY = "pdfdir";
 
 FileSelectorView::FileSelectorView(QWidget *parent)
@@ -15,7 +15,7 @@ FileSelectorView::FileSelectorView(QWidget *parent)
 {
 
     QSettings setting(INIT, QSettings::IniFormat);
-    QString str = setting.value(PDF_KEY, tr("../pdf")).toString();
+    QString str = setting.value(PDF_KEY).toString();
     dir = new QDir(str);
     if(dir->exists()){
         dir->setFilter(QDir::Files | QDir::NoSymLinks);
