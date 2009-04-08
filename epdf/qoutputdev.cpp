@@ -32,6 +32,8 @@
 #include <QPolygon>
 #include <QVector>
 #include <QMultiHash>
+#include <QLabel>
+#include <QPen>
 
 #include <qtimer.h>
 #include <qapplication.h>
@@ -174,9 +176,16 @@ QFont QOutputDev::matchFont ( GfxFont *gfxFont, fp_t m11, fp_t m12, fp_t m21, fp
 
 QOutputDev::QOutputDev ( QWidget *parent ) : QScrollArea (parent)
 {
-	m_pixmap = 0;
-	m_painter = 0;
+	m_pixmap = NULL;
+	m_painter = NULL;
+	m_label = new QLabel;
+    m_label->setBackgroundRole(QPalette::Base);
+    m_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    m_label->setScaledContents(true);
+    m_label->resize(0, 0);
 
+    setBackgroundRole(QPalette::Dark);
+    setWidget(m_label);
 	// create text object
 	m_text = new TextPage ( gFalse );
 }
@@ -198,13 +207,11 @@ void QOutputDev::startPage ( int /*pageNum*/, GfxState *state )
 	m_painter = new QPainter ( m_pixmap );
 
 	QPDFDBG( printf ( "NEW PIXMAP (%ld x %ld)\n", lrint ( state-> getPageWidth ( )),  lrint ( state-> getPageHeight ( ))));
-
-	resize( m_pixmap-> width ( ), m_pixmap-> height ( ));
-	ensureVisible(0, 0);
-
+	
 	m_pixmap-> fill ( Qt::white ); // clear window
 	m_text-> clear ( ); // cleat text object
-	viewport ( )-> repaint ( );
+	m_label->setPixmap(*m_pixmap);
+	m_label->adjustSize();
 }
 
 void QOutputDev::endPage ( )
@@ -221,7 +228,7 @@ void QOutputDev::endPage ( )
 	m_painter = 0;
 #endif
 
-	updateContents ( 0, 0, contentsWidth ( ), contentsHeight ( ));
+	//updateContents ( 0, 0, contentsWidth ( ), contentsHeight ( ));
 }
 
 void QOutputDev::drawLink ( Link *link, Catalog */*catalog*/ )
@@ -236,8 +243,8 @@ void QOutputDev::drawLink ( Link *link, Catalog */*catalog*/ )
 		cvtUserToDev ( x1, y1, &x,  &y );
 		cvtUserToDev ( x2, y2, &dx, &dy );
 
-		QPen oldpen = m_painter-> pen ( );
-		m_painter-> setPen ( blue );
+		QPen oldpen = m_painter->pen( );
+		m_painter-> setPen ( QColor(Qt::blue) );
 		m_painter-> drawRect ( x, y, dx, dy );
 		m_painter-> setPen ( oldpen );
 	}

@@ -34,7 +34,7 @@ class CharCodeToUnicode;
 class QPainter;
 class QPixmap;
 class QPointArray;
-
+class QLabel;
 
 typedef fouble fp_t;
 
@@ -145,6 +145,7 @@ protected:
 	virtual void drawContents ( QPainter *p, int, int, int, int );
 
 private:
+	QLabel *m_label;
 	QPixmap *m_pixmap;   		// pixmap to draw into
 	QPainter *m_painter;
 
