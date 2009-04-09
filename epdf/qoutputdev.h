@@ -5,16 +5,17 @@
 #pragma interface
 #endif
 
-//#include "aconf.h"
-//#include <stddef.h>
+#include "aconf.h"
+#include <stddef.h>
 
 #include <QScrollArea>
 #include "xpdf/OutputDev.h"
 
 class Object;
 
-#include "config.h"
-#include "CharTypes.h"
+#include "goo/gtypes.h"
+#include "xpdf/config.h"
+#include "xpdf/CharTypes.h"
 #include "xpdf/GlobalParams.h"
 
 class GString;
@@ -33,8 +34,10 @@ class CharCodeToUnicode;
 
 class QPainter;
 class QPixmap;
-class QPointArray;
+class QPolygon;
+class QVector;
 class QLabel;
+class QFont;
 
 typedef fouble fp_t;
 
@@ -157,8 +160,8 @@ private:
 	void updateLineAttrs ( GfxState *state, GBool updateDash );
 	void doFill ( GfxState *state, bool winding );
 	void doClip ( GfxState *state, bool winding );
-	int convertPath ( GfxState *state, QPointArray &points, QArray<int> &lengths );
-	int convertSubpath ( GfxState *state, GfxSubpath *subpath, QPointArray &points );
+	int convertPath (GfxState *state, QPolygon &points, QVector<int> &lengths );
+	int convertSubpath ( GfxState *state, GfxSubpath *subpath, QPolygon &points );
 };
 
 #endif
