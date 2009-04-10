@@ -212,7 +212,9 @@ void QOutputDev::startPage ( int /*pageNum*/, GfxState *state )
 	
 	m_pixmap-> fill ( Qt::white ); // clear window
 	m_text-> clear ( ); // cleat text object
-	m_label->setPixmap(*m_pixmap);
+	//m_label->setPixmap(*m_pixmap);
+	//m_label->adjustSize();
+	drawContents();
 	m_label->adjustSize();
 }
 
@@ -231,7 +233,8 @@ void QOutputDev::endPage ( )
 #endif
 
 	//updateContents ( 0, 0, contentsWidth ( ), contentsHeight ( ));
-	m_label->setPixmap(*m_pixmap);
+	//m_label->setPixmap(*m_pixmap);
+	drawContents();
 }
 
 void QOutputDev::drawLink ( Link *link, Catalog */*catalog*/ )
@@ -869,10 +872,10 @@ void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int wi
 		return;
 	}
 
-	QImage img ( width, height, 32 );
+	QImage img ( width, height, QImage::Format_RGB32);
 
 	if ( maskColors )
-		img. setAlphaBuffer ( true );
+		img = img.convertToFormat(QImage::Format_ARGB32);
 
 	QPDFDBG( printf ( "IMAGE (%dx%d)\n", width, height ));
 
@@ -884,13 +887,13 @@ void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int wi
 	GfxRGB rgb;
 
 
-	uchar **scanlines = img. jumpTable ( );
+	int scanlines = 0;
 
 	if ( ctm [3] > 0 )
 		scanlines += ( height - 1 );
 
 	for ( int y = 0; y < height; y++ ) {
-		QRgb *scanline = (QRgb *) *scanlines;
+		QRgb *scanline = (QRgb *)img.scanLine(scanlines);
 
 		if ( ctm [0] < 0 )
 			scanline += ( width - 1 );
@@ -920,17 +923,17 @@ void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int wi
 
 
 #ifndef QT_NO_TRANSFORMATIONS
-	QWMatrix mat ( ctm [0] / width, ctm [1], ctm [2], ctm [3] / height, ctm [4], ctm [5] );
+	QMatrix mat ( ctm [0] / width, ctm [1], ctm [2], ctm [3] / height, ctm [4], ctm [5] );
 
 	std::cerr << "MATRIX T=" << mat. dx ( ) << "/" << mat. dy ( ) << std::endl
 	         << " - M=" << mat. m11 ( ) << "/" << mat. m12 ( ) << "/" << mat. m21 ( ) << "/" << mat. m22 ( ) << std::endl;
 
-	QWMatrix oldmat = m_painter-> worldMatrix ( );
+	QMatrix oldmat = m_painter-> worldMatrix ( );
 	m_painter-> setWorldMatrix ( mat, true );
 
 #ifdef QWS
 	QPixmap pm;
-	pm. convertFromImage ( img );
+	pm.fromImage ( img );
 	m_painter-> drawPixmap ( 0, 0, pm );
 #else
 	m_painter-> drawImage ( QPoint ( 0, 0 ), img );
@@ -961,13 +964,13 @@ void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int wi
 
 		QPDFDBG( printf ( "DRAWING IMAGE: %d/%d - %dx%d\n", x, y, w, h ));
 
-		img = img. smoothScale ( w, h );
+		img = img.scaled(w, h , 
+			Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 		qApp-> processEvents ( );
 		m_painter-> drawImage ( x, y, img );
 	}
 
 #endif
-
 
 	delete imgStr;
 	qApp-> processEvents ( );
@@ -978,7 +981,7 @@ void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int wi
 bool QOutputDev::findText ( const QString &str, QRect &r, bool top, bool bottom )
 {
 	int l, t, w, h;
-	r. rect ( &l, &t, &w, &h );
+	r. getRect ( &l, &t, &w, &h );
 
 	bool res = findText ( str, l, t, w, h, top, bottom );
 
@@ -1045,10 +1048,8 @@ QString QOutputDev::getText ( const QRect &r )
 
 
 
-void QOutputDev::drawContents ( QPainter *p, int clipx, int clipy, int clipw, int cliph )
+void QOutputDev::drawContents ( )
 {
 	if ( m_pixmap )
-		p-> drawPixmap ( clipx, clipy, *m_pixmap, clipx, clipy, clipw, cliph );
-	else
-		p-> fillRect ( clipx, clipy, clipw, cliph, white );
+		m_label->setPixmap(*m_pixmap);
 }

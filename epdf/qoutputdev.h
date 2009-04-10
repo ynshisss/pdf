@@ -145,7 +145,7 @@ public:
 	QString getText ( const QRect &r );
 
 protected:
-	virtual void drawContents ( QPainter *p, int, int, int, int );
+	virtual void drawContents ( );
 
 private:
 	QLabel *m_label;
