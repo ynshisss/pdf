@@ -32,9 +32,10 @@
 #include <QPolygon>
 #include <QVector>
 #include <QMultiHash>
-#include <QLabel>
 #include <QPen>
 #include <QPainterPath>
+#include <QRubberBand>
+#include <QMouseEvent>
 #include <QMatrix>
 
 #include <qtimer.h>
@@ -92,7 +93,40 @@ static QOutFontSubst qStdFonts [] = {
 
 
 
+OutputLabel::OutputLabel(QWidget *parent) : QLabel(parent)
+{
+	rubberBand = NULL;
+	setBackgroundRoke(QPalette::Base);
+	setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+	setScaledContents(true);
+	resize(0, 0);
+	//setAttribute(Qt::WA_OpaquePaintEvent);
+}
 
+OutputLable::~OutputLabel()
+{
+}
+
+void OutputLabel::mousePressEvent(QMouseEvent *e)
+{
+	origin = e->pos();
+	if(!rubberBand) {
+		rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+	}
+	rubberBand->hide();
+	rubberBand->setGeometry(QRect(origin, QSize()));
+	rubberBand->show();
+}
+
+void OutputLabel::mouseMoveEvent(QMouseEvent *e)
+{
+	rubberBand->setGeometry(QRect(origin, e->pos()).normalized());
+}
+
+void OutputLabel::mouseReleaseEvent(QMouseEvent *e)
+{
+	
+}
 
 QFont QOutputDev::matchFont ( GfxFont *gfxFont, fp_t m11, fp_t m12, fp_t m21, fp_t m22 )
 {
@@ -180,11 +214,7 @@ QOutputDev::QOutputDev ( QWidget *parent ) : QScrollArea (parent)
 {
 	m_pixmap = NULL;
 	m_painter = NULL;
-	m_label = new QLabel;
-    m_label->setBackgroundRole(QPalette::Base);
-    m_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    m_label->setScaledContents(true);
-    m_label->resize(0, 0);
+	m_label = new OutputLabel;
 
     setBackgroundRole(QPalette::Dark);
     setWidget(m_label);
@@ -215,7 +245,7 @@ void QOutputDev::startPage ( int /*pageNum*/, GfxState *state )
 	//m_label->setPixmap(*m_pixmap);
 	//m_label->adjustSize();
 	drawContents();
-	m_label->adjustSize();
+	//m_label->adjustSize();
 }
 
 void QOutputDev::endPage ( )
@@ -1050,6 +1080,8 @@ QString QOutputDev::getText ( const QRect &r )
 
 void QOutputDev::drawContents ( )
 {
-	if ( m_pixmap )
+	if ( m_pixmap ){
 		m_label->setPixmap(*m_pixmap);
+		m_label->adjustSize();
+	}
 }

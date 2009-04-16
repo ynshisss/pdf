@@ -7,7 +7,6 @@ class QMenu;
 class QToolBar;
 class QLineEdit;
 class QAction;
-
 class FileSelector;
 class OutputDev;
 //class PDFDoc;

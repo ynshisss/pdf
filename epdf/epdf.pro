@@ -5,12 +5,22 @@ TARGET = epdf
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    library/fileselector.cpp \
-    outputdev.cpp \
-    library/fileselectorview.cpp
+	qoutputdev.cpp \
+    myoutputdev.cpp \
+	qbusybar.cpp \
+	gooStub.cpp \
+	goo/*.cc \
+    library/*.cpp \
+	xpdf/*.cc
+
 HEADERS += mainwindow.h \
-    library/fileselector.h \
-    outputdev.h \
-    library/fileselectorview.h
+	qoutputdev.h \
+    myoutputdev.h \
+	qbusybar.h \
+	aconf.h fixed.h UTF8.h \
+	goo/*.h \
+    library/*.h \
+	xpdf/*.h
+
 RESOURCES += epdf.qrc
 OTHER_FILES += epdf.ini
