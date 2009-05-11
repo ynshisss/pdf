@@ -9,7 +9,6 @@
 #include <stddef.h>
 
 #include <QScrollArea>
-#include <QLabel>
 #include "xpdf/OutputDev.h"
 
 class Object;
@@ -32,7 +31,6 @@ class DisplayFontParam;
 class UnicodeMap;
 class CharCodeToUnicode;
 
-class QRubberBand;
 class QPainter;
 class QPixmap;
 class QPolygon;
@@ -41,24 +39,6 @@ class QFont;
 
 typedef fouble fp_t;
 
-//------------------------------------------------------------------------
-//OutputLabel
-//------------------------------------------------------------------------
-class OutputLabel : public QLabel
-{
-	Q_OBJECT
-public:
-	OutputLabel(QWidget *parent = 0);
-	virtual ~OutputLabel();
-	QRubberBand
-protected:
-	virtual void mousePressEvent(QMouseEvent *e);
-	virtual void mouseMoveEvent(QMouseEvent *e);
-	virtual void mouseReleaseEvent(QMouseEvent *e);
-private:
-	QRubberBand *rubberBand;
-	QPoint origin;
-}
 //------------------------------------------------------------------------
 // XOutputDev
 //------------------------------------------------------------------------
@@ -160,12 +140,11 @@ public:
 	// Get the text which is inside the specified rectangle.
 	QString getText ( int left, int top, int width, int height );
 	QString getText ( const QRect &r );
-
+	QPixmap *getMyPixmap();
 protected:
 	virtual void drawContents ( );
 
 private:
-	OutputLabel *m_label;
 	QPixmap *m_pixmap;   		// pixmap to draw into
 	QPainter *m_painter;
 
