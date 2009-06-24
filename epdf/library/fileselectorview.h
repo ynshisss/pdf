@@ -4,7 +4,6 @@
 #include <QListWidget>
 class QDir;
 class QListWidgetItem;
-class QFileInfo;
 
 class FileSelectorView : public QListWidget
 {

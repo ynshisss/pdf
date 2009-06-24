@@ -11,9 +11,9 @@
 #include <QtDebug>
 
 #include "mainwindow.h"
-#include "outputdev.h"
+#include "myoutputdev.h"
 #include "library/fileselector.h"
-//#include "xpdf/PDFDoc.h"
+#include "xpdf/PDFDoc.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_currentpage = 0;
     m_fullscreen = false;
     m_renderok = false;
-//	m_doc = NULL;
+	m_doc = NULL;
 
     createToolBars();
 
@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 			this, SLOT(openFile(const QString &)));
 
     m_outdev = new OutputDev();
+	connect(m_outdev, SIGNAL(selectionChanged(const QRect&)),
+			this, SLOT(copyToClipboard(const QRect&)));
 
     m_stack = new QStackedWidget();
     m_stack->addWidget(m_outdev);
@@ -43,12 +45,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 
     setCentralWidget(m_stack);
-    //openFile();
+    openFile();
 }
 
 MainWindow::~MainWindow()
 {
-
+	delete m_doc;
 }
 
 
@@ -57,7 +59,7 @@ void MainWindow::createToolBars()
     QAction *act = 0;
 
     m_pm_zoom = new QMenu(tr("Zoom"));
-    act = m_pm_zoom->addAction(tr("Fit to page"));
+    act = m_pm_zoom->addAction(tr("Fit to width"));
     act->setData(QVariant(1));
     act = m_pm_zoom->addAction(tr("Fit to page"));
     act->setData(QVariant(2));
@@ -118,8 +120,31 @@ void MainWindow::createToolBars()
     m_tb_find->addAction(QIcon(tr(":/next")), tr("Next"),
                          this, SLOT(findText()));
 
-
 }
+
+void MainWindow::setBusy( bool b )
+{
+	if( b != m_busy ){
+		m_busy = b;
+		m_outdev->setBusy( m_busy );
+		setEnable( !m_busy );
+	}
+}
+
+void MainWindow::busy() const
+{
+	return m_busy;
+}
+
+void MainWindow::renderPage()
+{
+}
+
+void MainWindow::delayedInit()
+{
+	
+}
+
 void MainWindow::closeFileSelector()
 {
 	m_tb_menu->show();
@@ -128,6 +153,20 @@ void MainWindow::closeFileSelector()
 	m_to_find->setChecked(false);
 	m_stack->setCurrentWidget(m_outdev);
 }
+
+void MainWindow::updateCaption()
+{
+	QString cap = "";
+	if ( !m_currentdoc.isEmpty() )
+		cap = QString("%1 - ").arg(m_currentdoc);
+	cap += "EPdf";
+	setWindowTitle( cap );
+}
+
+void copyToClipboard(const QRect &r)
+{
+}
+
 void MainWindow::firstPage ( )
 {
 }

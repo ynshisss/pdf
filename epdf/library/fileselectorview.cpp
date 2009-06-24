@@ -1,6 +1,5 @@
 #include <QSettings>
 #include <QDir>
-#include <QStringList>
 #include <QFileInfo>
 #include <QList>
 #include <QListWidgetItem>
@@ -29,6 +28,8 @@ FileSelectorView::FileSelectorView(QWidget *parent)
 
 FileSelectorView::~FileSelectorView()
 {
+	delete dir;
+	dir = NULL;
 }
 
 QListWidgetItem * FileSelectorView::createItem(const QFileInfo *info)

@@ -9,6 +9,7 @@
 #include <stddef.h>
 
 #include <QScrollArea>
+#include <QFont>
 #include "xpdf/OutputDev.h"
 
 class Object;
@@ -35,7 +36,6 @@ class QPainter;
 class QPixmap;
 class QPolygon;
 class QVector;
-class QFont;
 
 typedef fouble fp_t;
 

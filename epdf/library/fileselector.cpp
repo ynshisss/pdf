@@ -1,9 +1,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QToolButton>
+#include <QListWidgetItem>
 #include <QIcon>
-#include <QTextEdit>
-#include <QLabel>
 #include "fileselector.h"
 #include "fileselectorview.h"
 
@@ -54,7 +53,6 @@ void FileSelector::fileClicked(QListWidgetItem *item)
     if( !item || item->data(Qt::UserRole).isNull())
         return;
     emit fileSelected(item->data(Qt::UserRole).toString());
-    emit closeMe();
 }
 
 

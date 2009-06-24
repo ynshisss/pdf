@@ -22,7 +22,7 @@
 #include "xpdf/FontFile.h"
 #include "xpdf/Error.h"
 #include "xpdf/TextOutputDev.h"
-#include "QOutputDev.h"
+#include "qoutputdev.h"
 
 #include <QColor>
 #include <QPixmap>
@@ -42,8 +42,8 @@
 #include <qapplication.h>
 #include <qclipboard.h>
 
-//#define QPDFDBG(x) x		// special debug mode
-#define QPDFDBG(x)   		// normal compilation
+//#define EPDFDBG(x) x		// special debug mode
+#define EPDFDBG(x)   		// normal compilation
 
 
 //------------------------------------------------------------------------
@@ -88,11 +88,6 @@ static QOutFontSubst qStdFonts [] = {
 
 	{ 0,                       0,           false, false, QFont::AnyStyle }
 };
-
-
-
-
-
 
 QFont QOutputDev::matchFont ( GfxFont *gfxFont, fp_t m11, fp_t m12, fp_t m21, fp_t m22 )
 {
@@ -254,7 +249,7 @@ void QOutputDev::drawLink ( Link *link, Catalog */*catalog*/ )
 	}
 }
 
-void QOutputDev::saveState ( GfxState */*state*/ )
+void QOutputDev::saveState ( GfxState * /*state*/ )
 {
         if ( ! m_painter )
             return;
@@ -621,12 +616,12 @@ int QOutputDev::convertSubpath ( GfxState *state, GfxSubpath *subpath, QPolygon 
 }
 
 
-void QOutputDev::beginString ( GfxState *state, GString */*s*/ )
+void QOutputDev::beginString ( GfxState *state, GString * /*s*/ )
 {
 	m_text-> beginString ( state );
 }
 
-void QOutputDev::endString ( GfxState */*state*/ )
+void QOutputDev::endString ( GfxState * /*state*/ )
 {
 	m_text-> endString ( );
 }
@@ -728,9 +723,7 @@ void QOutputDev::drawChar ( GfxState *state, fp_t x, fp_t y,
 	qApp-> processEvents ( );
 }
 
-
-
-void QOutputDev::drawImageMask ( GfxState *state, Object */*ref*/, Stream *str, int width, int height, GBool invert, GBool inlineImg )
+void QOutputDev::drawImageMask ( GfxState *state, Object * /*ref*/, Stream *str, int width, int height, GBool invert, GBool inlineImg )
 {
 	// get CTM, check for singular matrix
 	fp_t *ctm = state-> getCTM ( );
@@ -844,7 +837,7 @@ void QOutputDev::drawImageMask ( GfxState *state, Object */*ref*/, Stream *str, 
 }
 
 
-void QOutputDev::drawImage(GfxState *state, Object */*ref*/, Stream *str, int width, int height, GfxImageColorMap *colorMap, int *maskColors, GBool inlineImg )
+void QOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str, int width, int height, GfxImageColorMap *colorMap, int *maskColors, GBool inlineImg )
 {
 	int nComps, nVals, nBits;
 
