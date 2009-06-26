@@ -14,7 +14,7 @@
 #endif
 
 #include "../aconf.h"
-#include "../goo/Gtypes.h"
+#include "../goo/gtypes.h"
 #include "Object.h"
 #include "Dict.h"
 

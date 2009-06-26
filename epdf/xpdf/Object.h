@@ -18,7 +18,10 @@
 #include <string.h>
 #include "../goo/gtypes.h"
 #include "../goo/gmem.h"
-#include "GString.h"
+#include "../goo/GString.h"
+
+#include "Dict.h"
+#include "Stream.h"
 
 class XRef;
 class Array;
@@ -200,7 +203,7 @@ private:
     Array *array;		//   array
     Dict *dict;			//   dictionary
     Stream *stream;		//   stream
-    Ref ref;			//   indirect reference
+    struct Ref ref;			//   indirect reference
     char *cmd;			//   command
   };
 
@@ -214,8 +217,8 @@ private:
 // Array accessors.
 //------------------------------------------------------------------------
 
-#include "Array.h"
 
+#include "Array.h"
 inline int Object::arrayGetLength()
   { return array->getLength(); }
 
@@ -232,7 +235,6 @@ inline Object *Object::arrayGetNF(int i, Object *obj)
 // Dict accessors.
 //------------------------------------------------------------------------
 
-#include "Dict.h"
 
 inline int Object::dictGetLength()
   { return dict->getLength(); }
@@ -265,7 +267,6 @@ inline Object *Object::dictGetValNF(int i, Object *obj)
 // Stream accessors.
 //------------------------------------------------------------------------
 
-#include "Stream.h"
 
 inline GBool Object::streamIs(char *dictType)
   { return stream->getDict()->is(dictType); }

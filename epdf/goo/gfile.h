@@ -46,6 +46,7 @@
 #    endif
 #  endif
 #endif
+#include <dirent.h>
 #include "gtypes.h"
 
 class GString;

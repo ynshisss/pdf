@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include "../goo/gmem.h"
 #include "../goo/GString.h"
+#include "Object.h"
 #include "Stream.h"
 #include "Lexer.h"
 #include "Parser.h"

@@ -15,11 +15,9 @@
 
 #include "../goo/gtypes.h"
 #include "Object.h"
-
 class Dict;
 class Stream;
 class BaseStream;
-class GString;
 
 //------------------------------------------------------------------------
 // XRef

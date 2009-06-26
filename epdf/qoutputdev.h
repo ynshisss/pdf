@@ -35,7 +35,6 @@ class CharCodeToUnicode;
 class QPainter;
 class QPixmap;
 class QPolygon;
-class QVector;
 
 typedef fouble fp_t;
 

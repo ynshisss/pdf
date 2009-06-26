@@ -1,17 +1,19 @@
 #include "qbusybar.h"
 #include "myoutputdev.h"
+#include <QRubberBand>
+#include <QMouseEvent>
 
 OutputLabel::OutputLabel(QWidget *parent) : QLabel(parent)
 {
 	rubberBand = NULL;
-	setBackgroundRoke(QPalette::Base);
+	setBackgroundRole(QPalette::Base);
 	setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 	setScaledContents(true);
 	resize(0, 0);
 	//setAttribute(Qt::WA_OpaquePaintEvent);
 }
 
-OutputLable::~OutputLabel()
+OutputLabel::~OutputLabel()
 {
 }
 
@@ -60,7 +62,7 @@ void OutputLabel::mouseReleaseEvent(QMouseEvent *e)
 //MyOutputDev
 //*************************************************************
 
-MyOutputDev::MyOutputDev(QWidget *parent) : OutputDev(parent)
+MyOutputDev::MyOutputDev(QWidget *parent) : QOutputDev(parent)
 {
 	m_isbusy = false;
 
@@ -74,7 +76,7 @@ MyOutputDev::MyOutputDev(QWidget *parent) : OutputDev(parent)
 	addScrollBarWidget(m_counter, Qt::AlignLeft);
  
 	m_busybar = new QBusyBar(this);
-	m_busybar->steFixedWidth(100);
+	m_busybar->setFixedWidth(100);
 	m_busybar->hide();
 	addScrollBarWidget(m_busybar, Qt::AlignLeft); 
 
@@ -137,13 +139,12 @@ void MyOutputDev::setSelection(const QRect &r, bool scrollto)
 	m_outlabel->getRubberBand()->show();
 	if(scrollto){
 		QPoint c = r.center();
-		ensureVisible(c.x(), c.y(), r.width()/2+5, r.heigh()/2+5);
+		ensureVisible(c.x(), c.y(), r.width()/2+5, r.height()/2+5);
 	}
 }
 
-void MyOutputDev::keyPressEvent(QkeyEvent *e)
+void MyOutputDev::keyPressEvent(QKeyEvent *e)
 {
-	QOutputDev::keyPressEvent(e);
 }
 
 void MyOutputDev::drawContents()

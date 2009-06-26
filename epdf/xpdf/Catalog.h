@@ -14,6 +14,7 @@
 #endif
 
 #include "../goo/gtypes.h"
+#include "Object.h"
 class XRef;
 class Object;
 class Page;
@@ -56,7 +57,7 @@ public:
   GString *readMetadata();
 
   // Return the structure tree root object.
-  Object *getStructTreeRoot() { return &structTreeRoot; }
+  Object *getStructTreeRoot() { return structTreeRoot; }
 
   // Find a page, given its object ID.  Returns page number, or 0 if
   // not found.
@@ -73,11 +74,11 @@ private:
   Ref *pageRefs;		// object ID for each page
   int numPages;			// number of pages
   int pagesSize;		// size of pages array
-  Object dests;			// named destination dictionary
-  Object nameTree;		// name tree
+  Object *dests;			// named destination dictionary
+  Object *nameTree;		// name tree
   GString *baseURI;		// base URI for URI-type links
-  Object metadata;		// metadata stream
-  Object structTreeRoot;	// structure tree root dictionary
+  Object *metadata;		// metadata stream
+  Object *structTreeRoot;	// structure tree root dictionary
   GBool ok;			// true if catalog is valid
 
   int readPageTree(Dict *pages, PageAttrs *attrs, int start,

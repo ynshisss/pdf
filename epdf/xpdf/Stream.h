@@ -15,15 +15,14 @@
 
 #include <stdio.h>
 #include "../goo/gtypes.h"
-#include "Object.h"
-#include "Stream.h"
 
 #ifndef NO_DECRYPTION
 class Decrypt;
 #endif
 class GString;
 class Dict;
-
+class Object;
+class BaseStream;
 //------------------------------------------------------------------------
 
 enum StreamKind {
@@ -126,7 +125,8 @@ public:
 				Guint length, Object *dict) = 0;
   virtual void setPos(Guint pos, int dir = 0) = 0;
   virtual BaseStream *getBaseStream() { return this; }
-  virtual Dict *getDict() { return dict.getDict(); }
+  //virtual Dict *getDict() { return dict->getDict(); }
+  virtual Dict *getDict();
 
   // Get/set position of first byte of stream within the file.
   virtual Guint getStart() = 0;
@@ -146,7 +146,7 @@ protected:
 
 private:
 
-  Object dict;
+  Object *dict;
 };
 
 //------------------------------------------------------------------------

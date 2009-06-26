@@ -18,11 +18,16 @@
 #endif
 #include <string.h>
 #include <ctype.h>
+#include "aconf.h"
 #include "../goo/gmem.h"
 #include "../goo/gfile.h"
 #include "../goo/GString.h"
 #include "config.h"
-#include "Dict.h"
+#include "Object.h"
+#ifndef NO_DECRYPTION
+#include "Decrypt.h"
+#endif
+#include "Stream.h"
 #include "Error.h"
 #include "Stream-CCITT.h"
 
@@ -263,18 +268,24 @@ Stream *Stream::makeFilter(char *name, Stream *str, Object *params) {
 //------------------------------------------------------------------------
 
 BaseStream::BaseStream(Object *dictA) {
-  dict = *dictA;
+  dict = (Object *)gmalloc(sizeof(Object));
+  dict[0] = *dictA;
 #ifndef NO_DECRYPTION
   decrypt = NULL;
 #endif
 }
 
 BaseStream::~BaseStream() {
-  dict.free();
+  dict->free();
+  gfree(dict);
 #ifndef NO_DECRYPTION
   if (decrypt)
     delete decrypt;
 #endif
+}
+
+Dict * BaseStream::getDict() { 
+	return dict->getDict(); 
 }
 
 #ifndef NO_DECRYPTION

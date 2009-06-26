@@ -13,16 +13,16 @@
 #pragma interface
 #endif
 
-#include "Object.h"
 #include "../goo/gtypes.h"
 class XRef;
+class Object;
 //------------------------------------------------------------------------
 // Dict
 //------------------------------------------------------------------------
 
 struct DictEntry {
   char *key;
-  Object val;
+  Object *val;
 };
 
 class Dict {

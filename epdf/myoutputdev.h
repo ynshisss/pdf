@@ -9,7 +9,7 @@
 #include <QLabel>
 class GfxState;
 class QRubberBand;
-calss QBusyBar;
+class QBusyBar;
 
 //------------------------------------------------------------------------
 //OutputLabel
@@ -32,7 +32,7 @@ protected:
 private:
 	QRubberBand *rubberBand;
 	QPoint origin;
-}
+};
 
 
 class MyOutputDev : public QOutputDev

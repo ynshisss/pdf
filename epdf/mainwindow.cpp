@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 	connect(m_filesel, SIGNAL(fileSelected(const QString &)),
 			this, SLOT(openFile(const QString &)));
 
-    m_outdev = new OutputDev();
+    m_outdev = new MyOutputDev();
 	connect(m_outdev, SIGNAL(selectionChanged(const QRect&)),
 			this, SLOT(copyToClipboard(const QRect&)));
 
@@ -127,11 +127,11 @@ void MainWindow::setBusy( bool b )
 	if( b != m_busy ){
 		m_busy = b;
 		m_outdev->setBusy( m_busy );
-		setEnable( !m_busy );
+		setEnabled( !m_busy );
 	}
 }
 
-void MainWindow::busy() const
+bool MainWindow::busy() const
 {
 	return m_busy;
 }
@@ -163,7 +163,7 @@ void MainWindow::updateCaption()
 	setWindowTitle( cap );
 }
 
-void copyToClipboard(const QRect &r)
+void MainWindow::copyToClipboard(const QRect &r)
 {
 }
 
@@ -232,7 +232,7 @@ void MainWindow::openFile ( const QString &f )
 void MainWindow::setDocument ( const QString & )
 {
 }
-QMenu * MainWindow::CreatePopupMenu()
+QMenu * MainWindow::createPopupMenu()
 {
 	return NULL;
 }

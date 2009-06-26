@@ -1,9 +1,9 @@
 #ifndef FILESELECTORVIEW_H
 #define FILESELECTORVIEW_H
-
 #include <QListWidget>
 class QDir;
 class QListWidgetItem;
+class QFileInfo;
 
 class FileSelectorView : public QListWidget
 {
@@ -14,9 +14,11 @@ public:
 
 public slots:
     void refresh();
+
 private:
     void displayItem();
-    QListWidgetItem* createItem(const QFileInfo *info);
+    QListWidgetItem * createItem(const QFileInfo *info);
+
 private:
     QDir *dir;
 };

@@ -3,7 +3,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <QRect>
-
+#include <QPaintEvent>
 #include "qbusybar.h"
 
 QBusyBar::QBusyBar ( QWidget *parent) : QWidget ( parent)
@@ -104,7 +104,7 @@ void QBusyBar::paintEvent ( QPaintEvent *e )
 {
 	QPainter p ( this );
 
-	QRect clip = e-> rect ( );
+	QRect clip = e->rect ( );
 
 	int x  = 0;
 	int dx = width ( ) / m_div;

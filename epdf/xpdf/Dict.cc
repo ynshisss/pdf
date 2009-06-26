@@ -15,6 +15,7 @@
 #include "../goo/gmem.h"
 #include "XRef.h"
 #include "Dict.h"
+#include "Object.h"
 
 //------------------------------------------------------------------------
 // Dict
@@ -32,7 +33,8 @@ Dict::~Dict() {
 
   for (i = 0; i < length; ++i) {
     gfree(entries[i].key);
-    entries[i].val.free();
+    entries[i].val->free();
+	gfree(entries[i].val);
   }
   gfree(entries);
 }
@@ -43,7 +45,8 @@ void Dict::add(char *key, Object *val) {
     entries = (DictEntry *)grealloc(entries, size * sizeof(DictEntry));
   }
   entries[length].key = key;
-  entries[length].val = *val;
+  entries[length].val = (Object *)gmalloc(sizeof(Object));
+  entries[length].val[0] = *val;
   ++length;
 }
 
@@ -60,19 +63,19 @@ inline DictEntry *Dict::find(char *key) {
 GBool Dict::is(char *type) {
   DictEntry *e;
 
-  return (e = find("Type")) && e->val.isName(type);
+  return (e = find("Type")) && e->val->isName(type);
 }
 
 Object *Dict::lookup(char *key, Object *obj) {
   DictEntry *e;
 
-  return (e = find(key)) ? e->val.fetch(xref, obj) : obj->initNull();
+  return (e = find(key)) ? e->val->fetch(xref, obj) : obj->initNull();
 }
 
 Object *Dict::lookupNF(char *key, Object *obj) {
   DictEntry *e;
 
-  return (e = find(key)) ? e->val.copy(obj) : obj->initNull();
+  return (e = find(key)) ? e->val->copy(obj) : obj->initNull();
 }
 
 char *Dict::getKey(int i) {
@@ -80,9 +83,9 @@ char *Dict::getKey(int i) {
 }
 
 Object *Dict::getVal(int i, Object *obj) {
-  return entries[i].val.fetch(xref, obj);
+  return entries[i].val->fetch(xref, obj);
 }
 
 Object *Dict::getValNF(int i, Object *obj) {
-  return entries[i].val.copy(obj);
+  return entries[i].val->copy(obj);
 }

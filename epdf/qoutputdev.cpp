@@ -24,6 +24,7 @@
 #include "xpdf/TextOutputDev.h"
 #include "qoutputdev.h"
 
+#include <QtGlobal>
 #include <QColor>
 #include <QPixmap>
 #include <QImage>
@@ -103,7 +104,7 @@ QFont QOutputDev::matchFont ( GfxFont *gfxFont, fp_t m11, fp_t m12, fp_t m21, fp
 	// compute size and normalized transform matrix
 	int size = lrint ( sqrt ( m21 * m21 + m22 * m22 ));
 
-	QPDFDBG( printf ( "SET FONT: Name=%s, Size=%d, Bold=%d, Italic=%d, Mono=%d, Serif=%d, Symbol=%d, CID=%d, EmbFN=%s, M=(%f,%f,%f,%f)\n",
+	EPDFDBG( printf ( "SET FONT: Name=%s, Size=%d, Bold=%d, Italic=%d, Mono=%d, Serif=%d, Symbol=%d, CID=%d, EmbFN=%s, M=(%f,%f,%f,%f)\n",
 	         (( gfxFont-> getName ( )) ? gfxFont-> getName ( )-> getCString ( ) : "<n/a>" ),
 	         size,
 	         gfxFont-> isBold ( ),
@@ -201,7 +202,7 @@ void QOutputDev::startPage ( int /*pageNum*/, GfxState *state )
 	m_pixmap = new QPixmap ( lrint ( state-> getPageWidth ( )), lrint ( state-> getPageHeight ( )));
 	m_painter = new QPainter ( m_pixmap );
 
-	QPDFDBG( printf ( "NEW PIXMAP (%ld x %ld)\n", lrint ( state-> getPageWidth ( )),  lrint ( state-> getPageHeight ( ))));
+	EPDFDBG( printf ( "NEW PIXMAP (%ld x %ld)\n", lrint ( state-> getPageWidth ( )),  lrint ( state-> getPageHeight ( ))));
 	
 	m_pixmap-> fill ( Qt::white ); // clear window
 	m_text-> clear ( ); // cleat text object
@@ -213,7 +214,7 @@ void QOutputDev::startPage ( int /*pageNum*/, GfxState *state )
 
 void QOutputDev::endPage ( )
 {
-        QPDFDBG( printf("End page\n") );
+        EPDFDBG( printf("End page\n") );
 	m_text-> coalesce ( );
 
         /*
@@ -254,7 +255,7 @@ void QOutputDev::saveState ( GfxState * /*state*/ )
         if ( ! m_painter )
             return;
 
-	QPDFDBG( printf ( "SAVE (CLIP=%d/%d)\n",  m_painter-> hasClipping ( ), !m_painter-> clipRegion ( ). isEmpty ( )));
+	EPDFDBG( printf ( "SAVE (CLIP=%d/%d)\n",  m_painter-> hasClipping ( ), !m_painter-> clipRegion ( ). isEmpty ( )));
 
         m_painter-> save ( );
 }
@@ -268,7 +269,7 @@ void QOutputDev::restoreState ( GfxState */*state*/ )
 
 //	m_painter-> setClipRegion ( QRect ( 0, 0, m_pixmap-> width ( ), m_pixmap-> height ( )));
 //	m_painter-> setClipping ( false );
-	QPDFDBG ( printf ( "RESTORE (CLIP=%d/%d)\n", m_painter-> hasClipping ( ), !m_painter-> clipRegion ( ). isEmpty ( )));
+	EPDFDBG ( printf ( "RESTORE (CLIP=%d/%d)\n", m_painter-> hasClipping ( ), !m_painter-> clipRegion ( ). isEmpty ( )));
 }
 
 void QOutputDev::updateAll ( GfxState *state )
@@ -294,7 +295,7 @@ void QOutputDev::updateLineDash ( GfxState *state )
 void QOutputDev::updateFlatness ( GfxState */*state*/ )
 {
 	// not supported
-	QPDFDBG( printf ( "updateFlatness not supported !\n" ));
+	EPDFDBG( printf ( "updateFlatness not supported !\n" ));
 }
 
 void QOutputDev::updateLineJoin ( GfxState *state )
@@ -310,7 +311,7 @@ void QOutputDev::updateLineCap ( GfxState *state )
 // unimplemented
 void QOutputDev::updateMiterLimit ( GfxState */*state*/ )
 {
-	QPDFDBG( printf ( "updateMiterLimit not supported !\n" ));
+	EPDFDBG( printf ( "updateMiterLimit not supported !\n" ));
 }
 
 void QOutputDev::updateLineWidth ( GfxState *state )
@@ -422,7 +423,7 @@ void QOutputDev::stroke ( GfxState *state )
 	// transform points
 	int n = convertPath ( state, points, lengths );
 	tmp = points.data();
-	QPDFDBG( printf ( "DRAWING: %d POLYS\n", n ));
+	EPDFDBG( printf ( "DRAWING: %d POLYS\n", n ));
 
 	// draw each subpath
 	int j = 0;
@@ -430,11 +431,11 @@ void QOutputDev::stroke ( GfxState *state )
 		int len = lengths [i];
 
 		if ( len >= 2 ) {
-			QPDFDBG( printf ( " - POLY %d: ", i ));
-			QPDFDBG( for ( int ii = 0; ii < len; ii++ ))
-				QPDFDBG( printf ( "(%d/%d) ", points.point(j+ii). x ( ), 
+			EPDFDBG( printf ( " - POLY %d: ", i ));
+			EPDFDBG( for ( int ii = 0; ii < len; ii++ ))
+				EPDFDBG( printf ( "(%d/%d) ", points.point(j+ii). x ( ), 
 						points.point(j+ii). y ( )));
-			QPDFDBG( printf ( "\n" ));
+			EPDFDBG( printf ( "\n" ));
 			
 			m_painter-> drawPolyline (tmp+j, len);
 		}
@@ -471,7 +472,7 @@ void QOutputDev::doFill ( GfxState *state, bool winding )
 	// transform points
 	int n = convertPath ( state, points, lengths );
 	tmp = points.data();
-	QPDFDBG( printf ( "FILLING: %d POLYS\n", n ));
+	EPDFDBG( printf ( "FILLING: %d POLYS\n", n ));
 
 	QPen oldpen = m_painter-> pen ( );
 	m_painter-> setPen ( QPen ( Qt::NoPen ));
@@ -482,11 +483,11 @@ void QOutputDev::doFill ( GfxState *state, bool winding )
 		int len = lengths [i];
 
 		if ( len >= 3 ) {
-			QPDFDBG( printf ( " - POLY %d: ", i ));
-			QPDFDBG( for ( int ii = 0; ii < len; ii++ ))
-				QPDFDBG( printf ( "(%d/%d) ", points.point(j+ii). x ( ), 
+			EPDFDBG( printf ( " - POLY %d: ", i ));
+			EPDFDBG( for ( int ii = 0; ii < len; ii++ ))
+				EPDFDBG( printf ( "(%d/%d) ", points.point(j+ii). x ( ), 
 						points.point(j+ii). y ( )));
-			QPDFDBG( printf ( "\n" ));
+			EPDFDBG( printf ( "\n" ));
 
 			m_painter-> drawPolygon ( tmp+j, len, 
 								winding ? Qt::WindingFill:Qt::OddEvenFill);
@@ -518,7 +519,7 @@ void QOutputDev::doClip ( GfxState *state, bool winding )
 	
 	QRegion region;
 
-	QPDFDBG( printf ( "CLIPPING: %d POLYS\n", n ));
+	EPDFDBG( printf ( "CLIPPING: %d POLYS\n", n ));
 
 	// draw each subpath
 	int j = 0;
@@ -527,9 +528,9 @@ void QOutputDev::doClip ( GfxState *state, bool winding )
 
 		if ( len >= 3 ) {
 
-			QPDFDBG( printf ( " - POLY %d: ", i ));
-			QPDFDBG( for ( int ii = 0; ii < len; ii++ ) printf ( "(%d/%d) ", points.point(j+ii). x ( ), points.point(j+ii). y ( )));
-			QPDFDBG( printf ( "\n" ));
+			EPDFDBG( printf ( " - POLY %d: ", i ));
+			EPDFDBG( for ( int ii = 0; ii < len; ii++ ) printf ( "(%d/%d) ", points.point(j+ii). x ( ), points.point(j+ii). y ( )));
+			EPDFDBG( printf ( "\n" ));
 
 			region |= QRegion ( QPolygon(points.mid(j,len)), 
 								winding ? Qt::WindingFill : Qt::OddEvenFill );
@@ -658,7 +659,7 @@ void QOutputDev::drawChar ( GfxState *state, fp_t x, fp_t y,
 			}
 			else {
 				str [i] = ' ';
-				QPDFDBG( printf ( "CHARACTER NOT IN FONT: %hx\n", c. unicode ( )));
+				EPDFDBG( printf ( "CHARACTER NOT IN FONT: %hx\n", c. unicode ( )));
 			}
 		}
 
@@ -682,7 +683,7 @@ void QOutputDev::drawChar ( GfxState *state, fp_t x, fp_t y,
 		if ( dorot ) {
 			oldmat = m_painter-> worldMatrix ( );
 
-			std::cerr << std::endl << "ROTATED: " << m11 << ", " << m12 << ", " << m21 << ", " << m22 << " / SIZE: " << fsize << " / TEXT: " << str.toLocal8Bit ( ) << endl << endl;
+			//std::cerr << "ROTATED: " << m11 << ", " << m12 << ", " << m21 << ", " << m22 << " / SIZE: " << fsize << " / TEXT: " << str.toLocal8Bit ( ) << std::endl;
 
 			QMatrix mat ( lrint ( m11 / fsize ), lrint ( m12 / fsize ), -lrint ( m21 / fsize ), -lrint ( m22 / fsize ), lrint ( x1 ), lrint ( y1 ));
 
@@ -705,7 +706,7 @@ void QOutputDev::drawChar ( GfxState *state, fp_t x, fp_t y,
 		if ( fsize > 5 )
 			m_painter-> drawText ( lrint ( x1 ), lrint ( y1 ), str );
 		else
-			m_painter-> fillRect ( lrint ( x1 ), lrint ( y1 ), lrint ( QMAX( fp_t(1), dx1 )), lrint ( QMAX( fsize, dy1 )), m_painter-> pen ( ). color ( ));
+			m_painter-> fillRect ( lrint ( x1 ), lrint ( y1 ), lrint ( qMax( fp_t(1), dx1 )), lrint ( qMax( fsize, dy1 )), m_painter-> pen ( ). color ( ));
 
 		m_painter-> setPen ( oldpen );
 
@@ -714,7 +715,7 @@ void QOutputDev::drawChar ( GfxState *state, fp_t x, fp_t y,
 			m_painter-> setWorldMatrix ( oldmat );
 #endif
 
-		QPDFDBG( printf ( "DRAW TEXT: \"%s\" at (%ld/%ld)\n", str.toLocal8Bit ( ). data ( ), lrint ( x1 ), lrint ( y1 )));
+		EPDFDBG( printf ( "DRAW TEXT: \"%s\" at (%ld/%ld)\n", str.toLocal8Bit ( ). data ( ), lrint ( x1 ), lrint ( y1 )));
 	}
 	else if ( code != 0 ) {
 		// some PDF files use CID 0, which is .notdef, so just ignore it
@@ -749,7 +750,7 @@ void QOutputDev::drawImageMask ( GfxState *state, Object * /*ref*/, Stream *str,
 
 	QImage img ( width, height, QImage::Format_ARGB32 );
 
-	QPDFDBG( printf ( "IMAGE MASK (%dx%d)\n", width, height ));
+	EPDFDBG( printf ( "IMAGE MASK (%dx%d)\n", width, height ));
 
 	// initialize the image stream
 	ImageStream *imgStr = new ImageStream ( str, width, 1, 1 );
@@ -804,7 +805,7 @@ void QOutputDev::drawImageMask ( GfxState *state, Object * /*ref*/, Stream *str,
 
 #else
 	if (( ctm [1] < -0.1 ) || ( ctm [1] > 0.1 ) || ( ctm [2] < -0.1 ) || ( ctm [2] > 0.1 )) {
-		QPDFDBG( printf (  "### ROTATED / SHEARED / ETC -- CANNOT DISPLAY THIS IMAGE\n" ));
+		EPDFDBG( printf (  "### ROTATED / SHEARED / ETC -- CANNOT DISPLAY THIS IMAGE\n" ));
 	}
 	else {
 		int x = lrint ( ctm [4] );
@@ -822,7 +823,7 @@ void QOutputDev::drawImageMask ( GfxState *state, Object * /*ref*/, Stream *str,
 			h = -h;
 		}
 
-		QPDFDBG( printf ( "DRAWING IMAGE MASKED: %d/%d - %dx%d\n", x, y, w, h ));
+		EPDFDBG( printf ( "DRAWING IMAGE MASKED: %d/%d - %dx%d\n", x, y, w, h ));
 
 		img = img.scaled(w, h , 
 			Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -868,7 +869,7 @@ void QOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str, int w
 	if ( maskColors )
 		img = img.convertToFormat(QImage::Format_ARGB32);
 
-	QPDFDBG( printf ( "IMAGE (%dx%d)\n", width, height ));
+	EPDFDBG( printf ( "IMAGE (%dx%d)\n", width, height ));
 
 	// initialize the image stream
 	ImageStream *imgStr = new ImageStream ( str, width, nComps, nBits );
@@ -935,7 +936,7 @@ void QOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str, int w
 #else // QT_NO_TRANSFORMATIONS
 
 	if (( ctm [1] < -0.1 ) || ( ctm [1] > 0.1 ) || ( ctm [2] < -0.1 ) || ( ctm [2] > 0.1 )) {
-		QPDFDBG( printf ( "### ROTATED / SHEARED / ETC -- CANNOT DISPLAY THIS IMAGE\n" ));
+		EPDFDBG( printf ( "### ROTATED / SHEARED / ETC -- CANNOT DISPLAY THIS IMAGE\n" ));
 	}
 	else {
 		int x = lrint ( ctm [4] );
@@ -953,7 +954,7 @@ void QOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str, int w
 			h = -h;
 		}
 
-		QPDFDBG( printf ( "DRAWING IMAGE: %d/%d - %dx%d\n", x, y, w, h ));
+		EPDFDBG( printf ( "DRAWING IMAGE: %d/%d - %dx%d\n", x, y, w, h ));
 
 		img = img.scaled(w, h , 
 			Qt::IgnoreAspectRatio, Qt::SmoothTransformation);

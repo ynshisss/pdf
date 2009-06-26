@@ -18,7 +18,7 @@
 
 //template <> class fixed<10>;
 
-typedef fixed<10> fouble;
+typedef fixt<10> fouble;
 
 // ^^ QPDF specific
 

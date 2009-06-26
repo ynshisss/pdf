@@ -76,14 +76,16 @@ Catalog::Catalog(XRef *xrefA, GBool printCommands) {
   }
   pagesDict.free();
 
+  dests = (Object *)gmalloc(sizeof(Object));
   // read named destination dictionary
-  catDict.dictLookup("Dests", &dests);
+  catDict.dictLookup("Dests", dests);
 
+  nameTree = (Object *)gmalloc(sizeof(Object));
   // read root of named destination tree
   if (catDict.dictLookup("Names", &obj)->isDict())
-    obj.dictLookup("Dests", &nameTree);
+    obj.dictLookup("Dests", nameTree);
   else
-    nameTree.initNull();
+    nameTree->initNull();
   obj.free();
 
   // read base URI
@@ -95,11 +97,13 @@ Catalog::Catalog(XRef *xrefA, GBool printCommands) {
   }
   obj.free();
 
+  metadata = (Object *)gmalloc(sizeof(Object));
   // get the metadata stream
-  catDict.dictLookup("Metadata", &metadata);
+  catDict.dictLookup("Metadata", metadata);
 
+  structTreeRoot = (Object *)gmalloc(sizeof(Object));
   // get the structure tree root
-  catDict.dictLookup("StructTreeRoot", &structTreeRoot);
+  catDict.dictLookup("StructTreeRoot", structTreeRoot);
 
   catDict.free();
   return;
@@ -110,8 +114,8 @@ Catalog::Catalog(XRef *xrefA, GBool printCommands) {
   pagesDict.free();
  err1:
   catDict.free();
-  dests.initNull();
-  nameTree.initNull();
+  dests->initNull();
+  nameTree->initNull();
   ok = gFalse;
 }
 
@@ -127,13 +131,17 @@ Catalog::~Catalog() {
     gfree(pages);
     gfree(pageRefs);
   }
-  dests.free();
-  nameTree.free();
+  dests->free();
+  gfree(dests);
+  nameTree->free();
+  gfree(nameTree);
   if (baseURI) {
     delete baseURI;
   }
-  metadata.free();
-  structTreeRoot.free();
+  metadata->free();
+  gfree(metadata);
+  structTreeRoot->free();
+  gfree(structTreeRoot);
 }
 
 GString *Catalog::readMetadata() {
@@ -142,21 +150,21 @@ GString *Catalog::readMetadata() {
   Object obj;
   int c;
 
-  if (!metadata.isStream()) {
+  if (!metadata->isStream()) {
     return NULL;
   }
-  dict = metadata.streamGetDict();
+  dict = metadata->streamGetDict();
   if (!dict->lookup("Subtype", &obj)->isName("XML")) {
     error(-1, "Unknown Metadata type: '%s'",
 	  obj.isName() ? obj.getName() : "???");
   }
   obj.free();
   s = new GString();
-  metadata.streamReset();
-  while ((c = metadata.streamGetChar()) != EOF) {
+  metadata->streamReset();
+  while ((c = metadata->streamGetChar()) != EOF) {
     s->append(c);
   }
-  metadata.streamClose();
+  metadata->streamClose();
   return s;
 }
 
@@ -248,14 +256,14 @@ LinkDest *Catalog::findDest(GString *name) {
 
   // try named destination dictionary then name tree
   found = gFalse;
-  if (dests.isDict()) {
-    if (!dests.dictLookup(name->getCString(), &obj1)->isNull())
+  if (dests->isDict()) {
+    if (!dests->dictLookup(name->getCString(), &obj1)->isNull())
       found = gTrue;
     else
       obj1.free();
   }
-  if (!found && nameTree.isDict()) {
-    if (!findDestInTree(&nameTree, name, &obj1)->isNull())
+  if (!found && nameTree->isDict()) {
+    if (!findDestInTree(nameTree, name, &obj1)->isNull())
       found = gTrue;
     else
       obj1.free();
